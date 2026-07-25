@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - Wireframe Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .wireframe-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 15px;
+            background: linear-gradient(135deg, #d4af37, #c9860f);
+            color: #2c3e50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #e8c547, #d4af37);
+            transform: scale(1.05);
+        }
+
+        .wireframe-container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .wireframe-container h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #d4af37;
+            padding-bottom: 15px;
+        }
+
+        .wireframe-content {
+            display: none;
+        }
+
+        .wireframe-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .wireframe-svg {
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .wireframe-description {
+            background: #f0f8ff;
+            padding: 20px;
+            border-left: 4px solid #d4af37;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .wireframe-description h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .wireframe-description ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .wireframe-description li {
+            margin-bottom: 8px;
+        }
+
+        .flow-diagram {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .flow-diagram pre {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .footer {
+            text-align: center;
+            color: #2c3e50;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .grid-example {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #bdc3c7;
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #bdc3c7;
+        }
+
+        .content {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #bdc3c7;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 10px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            border-left: 4px solid #d4af37;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #d4af37;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .wireframe-nav {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-example {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💎 JMaaS Wireframes</h1>
+            <p>Interactive Layout Viewer - Jewellery Management as a Service</p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wireframe-nav">
+            <button class="nav-btn active" onclick="showWireframe('login')">1. Login</button>
+            <button class="nav-btn" onclick="showWireframe('dashboard')">2. Dashboard</button>
+            <button class="nav-btn" onclick="showWireframe('inventory')">3. Inventory</button>
+            <button class="nav-btn" onclick="showWireframe('billing')">4. Billing</button>
+            <button class="nav-btn" onclick="showWireframe('customers')">5. Customers</button>
+            <button class="nav-btn" onclick="showWireframe('ai')">6. AI Features</button>
+            <button class="nav-btn" onclick="showWireframe('analytics')">7. Analytics</button>
+            <button class="nav-btn" onclick="showWireframe('catalogue')">8. E-Catalogue</button>
+            <button class="nav-btn" onclick="showWireframe('flow')">9. Navigation Flow</button>
+        </div>
+
+        <!-- Wireframe Container -->
+        <div class="wireframe-container">
+            <!-- Login Page -->
+            <div id="login" class="wireframe-content active">
+                <h2>1. Login Page</h2>
+                <div style="background: white; border: 2px solid #2c3e50; padding: 60px 40px; text-align: center; border-radius: 10px;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">💎</div>
+                    <h2 style="color: #d4af37; font-size: 2em; margin-bottom: 5px;">JMaaS</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 40px;">Jewellery Management as a Service</p>
+                    
+                    <div style="max-width: 300px; margin: 0 auto; text-align: left;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Username</label>
+                            <input type="text" placeholder="Enter username" style="width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Password</label>
+                            <input type="password" placeholder="Enter password" style="width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <button style="width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #c9860f); color: #2c3e50; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; margin-bottom: 20px;">Login</button>
+                    </div>
+
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                        <strong>Demo Credentials:</strong>
+                        <p>Username: <code>demo</code></p>
+                        <p>Password: <code>demo123</code></p>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Centered login form with branding</li>
+                        <li>Username and Password input fields</li>
+                        <li>Demo credentials display for prototype</li>
+                        <li>Minimal, clean design</li>
+                        <li>Single purpose - authentication entry point</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard" class="wireframe-content">
+                <h2>2. Dashboard - Main Hub</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="sidebar">
+                        <h4 style="margin-bottom: 15px; color: #2c3e50;">Navigation</h4>
+                        <ul>
+                            <li>📊 Dashboard</li>
+                            <li>💍 Inventory</li>
+                            <li>🧾 Billing</li>
+                            <li>👥 Customers</li>
+                            <li>🤖 AI Features</li>
+                            <li>📈 Analytics</li>
+                            <li>📱 E-Catalogue</li>
+                            <li>🔐 Logout</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Dashboard Statistics</h3>
+                        <div class="grid-example">
+                            <div class="card">
+                                <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">₹50K</div>
+                                <div style="font-size: 0.9em;">Inventory Value</div>
+                            </div>
+                            <div class="card">
+                                <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">85</div>
+                                <div style="font-size: 0.9em;">Total Stock</div>
+                            </div>
+                            <div class="card">
+                                <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">8</div>
+                                <div style="font-size: 0.9em;">Products</div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: #2c3e50; margin-bottom: 15px; margin-top: 20px;">Quick Access</h3>
+                        <div class="grid-example">
+                            <div class="card" style="cursor: pointer; background: white; border: 2px solid #d4af37;">
+                                <div style="font-size: 2em;">💍</div>
+                                <strong>Inventory</strong>
+                            </div>
+                            <div class="card" style="cursor: pointer; background: white; border: 2px solid #d4af37;">
+                                <div style="font-size: 2em;">🧾</div>
+                                <strong>Billing</strong>
+                            </div>
+                            <div class="card" style="cursor: pointer; background: white; border: 2px solid #d4af37;">
+                                <div style="font-size: 2em;">🎁</div>
+                                <strong>AI Greeting</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Header with logo, title, user info, logout button</li>
+                        <li>Left sidebar with navigation menu (persistent)</li>
+                        <li>Statistics cards showing key metrics</li>
+                        <li>Quick access cards to main features</li>
+                        <li>Central hub for navigating all modules</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Inventory -->
+            <div id="inventory" class="wireframe-content">
+                <h2>3. Inventory Management</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="sidebar">
+                        <h4 style="margin-bottom: 15px; color: #2c3e50;">Navigation</h4>
+                        <ul style="font-size: 0.9em;">
+                            <li>📊 Dashboard</li>
+                            <li style="border-left-color: #e74c3c; background: #fff3cd;">💍 Inventory</li>
+                            <li>🧾 Billing</li>
+                            <li>👥 Customers</li>
+                            <li>🤖 AI Features</li>
+                            <li>📈 Analytics</li>
+                            <li>📱 E-Catalogue</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Inventory Management</h3>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                            <strong style="color: #2c3e50;">Filter by Category:</strong>
+                            <div style="margin-top: 10px;">
+                                <button style="padding: 8px 12px; margin: 5px; background: #d4af37; border: none; border-radius: 5px; cursor: pointer;">All</button>
+                                <button style="padding: 8px 12px; margin: 5px; background: white; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer;">Rings</button>
+                                <button style="padding: 8px 12px; margin: 5px; background: white; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer;">Necklaces</button>
+                                <button style="padding: 8px 12px; margin: 5px; background: white; border: 1px solid #bdc3c7; border-radius: 5px; cursor: pointer;">Bangles</button>
+                            </div>
+                        </div>
+
+                        <h4 style="color: #2c3e50; margin-bottom: 12px;">Items Grid:</h4>
+                        <div class="grid-example">
+                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="background: linear-gradient(135deg, #d4af37, #c9860f); color: white; padding: 15px; text-align: center;">
+                                    <strong>Gold Ring</strong><br><small>Rings</small>
+                                </div>
+                                <div style="padding: 15px; font-size: 0.9em;">
+                                    <div><strong>₹25,000</strong></div>
+                                    <div style="color: #7f8c8d;">Weight: 5g</div>
+                                    <div style="color: #7f8c8d;">Stock: ✓ 8 pcs</div>
+                                </div>
+                            </div>
+                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="background: linear-gradient(135deg, #d4af37, #c9860f); color: white; padding: 15px; text-align: center;">
+                                    <strong>Diamond Pendant</strong><br><small>Necklaces</small>
+                                </div>
+                                <div style="padding: 15px; font-size: 0.9em;">
+                                    <div><strong>₹45,000</strong></div>
+                                    <div style="color: #7f8c8d;">Weight: 3g</div>
+                                    <div style="color: #7f8c8d;">Stock: ✓ 5 pcs</div>
+                                </div>
+                            </div>
+                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="background: linear-gradient(135deg, #d4af37, #c9860f); color: white; padding: 15px; text-align: center;">
+                                    <strong>Pearl Bracelet</strong><br><small>Bracelets</small>
+                                </div>
+                                <div style="padding: 15px; font-size: 0.9em;">
+                                    <div><strong>₹15,000</strong></div>
+                                    <div style="color: #7f8c8d;">Weight: 8g</div>
+                                    <div style="color: #7f8c8d;">Stock: ✓ 12 pcs</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Filter items by category (Rings, Necklaces, Bracelets, etc.)</li>
+                        <li>Grid layout displaying product cards</li>
+                        <li>Each card shows: Name, Category, Price, Weight, Purity, Stock Status</li>
+                        <li>Visual indicators for stock availability</li>
+                        <li>Responsive 3-column grid layout</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Billing -->
+            <div id="billing" class="wireframe-content">
+                <h2>4. Billing System</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="content">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Items Being Billed:</h3>
+                        <table>
+                            <tr style="background: #d4af37;color: #2c3e50;">
+                                <th>Item Name</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td>Gold Ring</td>
+                                <td>₹25,000</td>
+                                <td><input type="number" value="1" style="width: 50px; padding: 5px;"></td>
+                                <td><button style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button></td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td>Diamond Pendant</td>
+                                <td>₹45,000</td>
+                                <td><input type="number" value="1" style="width: 50px; padding: 5px;"></td>
+                                <td><button style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button></td>
+                            </tr>
+                            <tr>
+                                <td>Pearl Bracelet</td>
+                                <td>₹15,000</td>
+                                <td><input type="number" value="1" style="width: 50px; padding: 5px;"></td>
+                                <td><button style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 8px; padding: 20px; border: 2px solid #d4af37; height: fit-content;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px; text-align: center;">Bill Summary</h3>
+                        <div style="padding: 10px; border-bottom: 1px solid #bdc3c7; display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Subtotal:</span>
+                            <strong>₹85,000</strong>
+                        </div>
+                        <div style="padding: 10px; border-bottom: 2px solid #d4af37; display: flex; justify-content: space-between; margin-bottom: 10px; color: #f39c12; font-weight: 600;">
+                            <span>GST (18%):</span>
+                            <strong>₹15,300</strong>
+                        </div>
+                        <div style="padding: 10px; display: flex; justify-content: space-between; color: #d4af37; font-size: 1.3em; font-weight: bold;">
+                            <span>Total:</span>
+                            <strong>₹100,300</strong>
+                        </div>
+                        <button style="width: 100%; margin-top: 15px; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Print Bill</button>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Two-column layout: Items table + Bill summary (sticky)</li>
+                        <li>Add items to bill with quantity</li>
+                        <li>Automatic calculation of subtotal</li>
+                        <li>GST calculation at 18%</li>
+                        <li>Grand total calculation</li>
+                        <li>Print button for bill output</li>
+                        <li>Remove items from bill</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Customers -->
+            <div id="customers" class="wireframe-content">
+                <h2>5. Customer Management (CRM)</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="sidebar">
+                        <h4 style="margin-bottom: 15px; color: #2c3e50;">Navigation</h4>
+                        <ul style="font-size: 0.9em;">
+                            <li>📊 Dashboard</li>
+                            <li>💍 Inventory</li>
+                            <li>🧾 Billing</li>
+                            <li style="border-left-color: #e74c3c; background: #fff3cd;">👥 Customers</li>
+                            <li>🤖 AI Features</li>
+                            <li>📈 Analytics</li>
+                            <li>📱 E-Catalogue</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Customer Management</h3>
+                        <div style="background: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; display: flex; gap: 10px;">
+                            <input type="text" placeholder="Search customer..." style="flex: 1; padding: 8px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            <button style="background: #d4af37; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 600;">+ Add Customer</button>
+                        </div>
+
+                        <table>
+                            <tr style="background: #d4af37; color: #2c3e50;">
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td>Rajesh Kumar</td>
+                                <td>rajesh@email.com</td>
+                                <td>9876543210</td>
+                                <td>2024-01-15</td>
+                                <td><button style="background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">View</button></td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td>Priya Sharma</td>
+                                <td>priya@email.com</td>
+                                <td>9876543211</td>
+                                <td>2024-02-20</td>
+                                <td><button style="background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>Amit Patel</td>
+                                <td>amit@email.com</td>
+                                <td>9876543212</td>
+                                <td>2024-03-10</td>
+                                <td><button style="background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">View</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Customer list in table format</li>
+                        <li>Search functionality for customers</li>
+                        <li>Add new customer button</li>
+                        <li>Display: Name, Email, Phone, Join Date</li>
+                        <li>Action buttons: View, Edit, Delete</li>
+                        <li>Sort and filter capabilities</li>
+                        <li>Pagination for large customer lists</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- AI Features -->
+            <div id="ai" class="wireframe-content">
+                <h2>6. AI Features - Greeting Generator</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div class="two-col" style="margin-top: 20px;">
+                    <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">🎁 AI Greeting Generator</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Customer Name:</label>
+                            <input type="text" placeholder="Enter customer name" style="width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Occasion:</label>
+                            <select style="width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                                <option>Select an occasion</option>
+                                <option>Birthday</option>
+                                <option>Wedding</option>
+                                <option>Anniversary</option>
+                                <option>Festival</option>
+                                <option>New Year</option>
+                            </select>
+                        </div>
+                        <button style="width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #c9860f); color: #2c3e50; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Generate Greeting</button>
+                    </div>
+
+                    <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Generated Greeting:</h3>
+                        <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; border-left: 4px solid #d4af37; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; margin-bottom: 15px;">
+                            <span style="color: #2c3e50; font-size: 1.1em;">Welcome John! 🎉 Celebrate your Birthday with our stunning collection of jewellery. Special discount of 10% available today!</span>
+                        </div>
+                        <button style="width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Copy to Clipboard</button>
+                        <button style="width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Share via WhatsApp</button>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Customer name input field</li>
+                        <li>Occasion dropdown (Birthday, Wedding, Anniversary, etc.)</li>
+                        <li>Generate button to create personalized greeting</li>
+                        <li>Display AI-generated greeting message</li>
+                        <li>Copy to clipboard functionality</li>
+                        <li>Share via WhatsApp/Email option</li>
+                        <li>Two-column responsive layout</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Analytics -->
+            <div id="analytics" class="wireframe-content">
+                <h2>7. Analytics Dashboard</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div style="padding: 20px;">
+                    <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; display: flex; gap: 10px;">
+                        <select style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            <option>This Month</option>
+                            <option>This Quarter</option>
+                            <option>This Year</option>
+                        </select>
+                        <button style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 600;">Export PDF</button>
+                    </div>
+
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Key Performance Indicators:</h3>
+                    <div class="grid-example">
+                        <div class="card" style="background: white; border: 2px solid #d4af37;">
+                            <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">₹50K</div>
+                            <div>Total Sales</div>
+                        </div>
+                        <div class="card" style="background: white; border: 2px solid #d4af37;">
+                            <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">₹5K</div>
+                            <div>Avg Transaction</div>
+                        </div>
+                        <div class="card" style="background: white; border: 2px solid #d4af37;">
+                            <div style="color: #d4af37; font-size: 1.5em; font-weight: bold;">5/mo</div>
+                            <div>Inventory Turnover</div>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Chart Section (Placeholder)</h3>
+                        <div style="background: #f0f8ff; padding: 40px; text-align: center; border-radius: 5px; color: #7f8c8d;">
+                            [Sales Trend Chart - Line Graph]<br>
+                            [Category Wise Sales - Pie Chart]<br>
+                            [Customer Acquisition - Bar Chart]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Date range filters (Month, Quarter, Year)</li>
+                        <li>Export to PDF functionality</li>
+                        <li>KPI cards showing: Total Sales, Avg Transaction, Inventory Turnover</li>
+                        <li>Multiple charts: Sales Trend, Category Wise Sales, Customer Acquisition</li>
+                        <li>Zoom/Drill-down capabilities</li>
+                        <li>Responsive chart layouts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- E-Catalogue -->
+            <div id="catalogue" class="wireframe-content">
+                <h2>8. E-Catalogue (Digital Brochure)</h2>
+                <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 1.5em;">☰ JMaaS 💎</span>
+                    </div>
+                    <div>Welcome, User! <button style="background: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-left: 10px; cursor: pointer;">Logout</button></div>
+                </div>
+                
+                <div style="padding: 20px;">
+                    <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 5px; display: flex; gap: 10px;">
+                        <input type="text" placeholder="Search items..." style="flex: 1; padding: 8px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        <select style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            <option>All Categories</option>
+                            <option>Rings</option>
+                            <option>Necklaces</option>
+                            <option>Bracelets</option>
+                        </select>
+                        <button style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 600;">Download PDF</button>
+                    </div>
+
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Jewellery Collection:</h3>
+                    <div class="grid-example">
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="background: #ecf0f1; padding: 30px; color: #7f8c8d; font-size: 2em;">🖼️ Image</div>
+                            <div style="padding: 15px;">
+                                <strong style="color: #2c3e50;">Gold Ring</strong><br>
+                                <div style="color: #d4af37; font-weight: bold;">₹5,000</div>
+                                <button style="background: #d4af37; color: #2c3e50; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 8px; font-weight: 600;">Details</button>
+                            </div>
+                        </div>
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="background: #ecf0f1; padding: 30px; color: #7f8c8d; font-size: 2em;">🖼️ Image</div>
+                            <div style="padding: 15px;">
+                                <strong style="color: #2c3e50;">Diamond Necklace</strong><br>
+                                <div style="color: #d4af37; font-weight: bold;">₹8,000</div>
+                                <button style="background: #d4af37; color: #2c3e50; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 8px; font-weight: 600;">Details</button>
+                            </div>
+                        </div>
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
+                            <div style="background: #ecf0f1; padding: 30px; color: #7f8c8d; font-size: 2em;">🖼️ Image</div>
+                            <div style="padding: 15px;">
+                                <strong style="color: #2c3e50;">Pearl Bracelet</strong><br>
+                                <div style="color: #d4af37; font-weight: bold;">₹3,000</div>
+                                <button style="background: #d4af37; color: #2c3e50; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 8px; font-weight: 600;">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ Key Features:</h3>
+                    <ul>
+                        <li>Search functionality for items</li>
+                        <li>Filter by category</li>
+                        <li>Grid display with product images (placeholders)</li>
+                        <li>Product name, price, description</li>
+                        <li>Download/Share catalogue options</li>
+                        <li>Print-friendly layout</li>
+                        <li>Responsive design for mobile viewing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navigation Flow -->
+            <div id="flow" class="wireframe-content">
+                <h2>9. Navigation Flow Diagram</h2>
+                <div class="flow-diagram">
+                    <pre>
+┌──────────────────────────────────────────────────┐
+│                    START                         │
+│                      │                           │
+│                      ▼                           │
+│           ╔═════════════════════╗               │
+│           ║   LOGIN PAGE        ║               │
+│           ║  Enter Credentials  ║               │
+│           ╚═════════════════════╝               │
+│                      │                           │
+│    ┌─────────────────┼─────────────────┐        │
+│    │                 │                 │        │
+│    ▼                 ▼                 ▼        │
+│ [Success]      [Demo]            [Failed]      │
+│    │            │                  │            │
+│    │            ▼                  ▼            │
+│    │      ┌──────────────┐    [Show Error]    │
+│    │      │  DASHBOARD   │◄────────┘          │
+│    │      │  (Main Hub)  │                    │
+│    │      └──────────────┘                    │
+│    │             ▲                            │
+│    └─────────────┘                            │
+│          │                                     │
+│    ┌─────┼─────┬──────────┬──────────┬──────┐ │
+│    │     │     │          │          │      │ │
+│    ▼     ▼     ▼          ▼          ▼      ▼ │
+│  [Inv] [Bill][Cust]   [AI]       [Anal]  [Cat]│
+│    │     │     │          │          │      │ │
+│    └─────┼─────┼──────────┼──────────┼──────┘ │
+│          └─────┴──────┬───┴──────────┘        │
+│                       │                       │
+│                       ▼                       │
+│            ┌────────────────────┐            │
+│            │ [Logout] Button    │            │
+│            │ (On any page)      │            │
+│            └────────────────────┘            │
+│                       │                       │
+│                       ▼                       │
+│            ┌────────────────────┐            │
+│            │   Back to LOGIN    │            │
+│            └────────────────────┘            │
+│                                              │
+└──────────────────────────────────────────────┘
+
+KEY NAVIGATION POINTS:
+1. Login → Dashboard (Central Hub)
+2. From Dashboard → All Modules via Sidebar
+3. From Any Module → Sidebar Navigation (Persistent)
+4. E-Catalogue → Accessible from Each Module
+5. Logout Button → Returns to Login Page
+6. Sidebar Collapsible on Mobile
+                    </pre>
+                </div>
+                
+                <div class="wireframe-description">
+                    <h3>✓ User Journey:</h3>
+                    <ul>
+                        <li>User enters login page</li>
+                        <li>Provides credentials (demo/demo123)</li>
+                        <li>Successful login → Redirects to Dashboard</li>
+                        <li>Dashboard acts as central hub with sidebar navigation</li>
+                        <li>All modules (Inventory, Billing, Customers, AI, Analytics, Catalogue) accessible from sidebar</li>
+                        <li>Each module has logout button</li>
+                        <li>Clicking logout → Returns to login page</li>
+                        <li>Consistent navigation pattern across all pages</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>JMaaS Wireframe Viewer</strong> | Low-Fidelity Design Document</p>
+            <p style="font-size: 0.9em; color: #7f8c8d; margin-top: 10px;">For: AI-Enabled Jewellery Management as a Service | College Project Review</p>
+        </div>
+    </div>
+
+    <script>
+        function showWireframe(page) {
+            // Hide all wireframes
+            const allWireframes = document.querySelectorAll('.wireframe-content');
+            allWireframes.forEach(wf => wf.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const allButtons = document.querySelectorAll('.nav-btn');
+            allButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected wireframe and mark button as active
+            const selectedWireframe = document.getElementById(page);
+            if (selectedWireframe) {
+                selectedWireframe.classList.add('active');
+                // Mark button as active
+                event.target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

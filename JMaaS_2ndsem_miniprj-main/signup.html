@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - Register</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-container signup-bg">
+        <div class="login-box signup-box">
+            <h1 class="login-title">JMaaS</h1>
+            <h2 style="text-align: center; color: var(--secondary-color); margin-bottom: 30px;">Create Account</h2>
+
+            <!-- Error Messages -->
+            <div id="errorMessage" class="alert alert-error" style="display: none; margin-bottom: 20px;">
+                <strong>Error:</strong> <span id="errorText"></span>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="alert alert-success" style="display: none; margin-bottom: 20px;">
+                <strong>Success!</strong> Account created. <a href="index.html" style="color: var(--success-color); text-decoration: underline;">Login here</a>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="signupForm" class="login-form">
+                <!-- Full Name -->
+                <div style="margin-bottom: 15px;">
+                    <label for="fullName" style="display: block; margin-bottom: 5px; font-weight: 500;">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Doe" required
+                        style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em;">
+                    <small style="color: var(--text-light); display: block; margin-top: 3px;">Enter your full name</small>
+                </div>
+
+                <!-- Email -->
+                <div style="margin-bottom: 15px;">
+                    <label for="email" style="display: block; margin-bottom: 5px; font-weight: 500;">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required
+                        style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em;">
+                    <small style="color: var(--text-light); display: block; margin-top: 3px;">We'll never share your email</small>
+                </div>
+
+                <!-- Username -->
+                <div style="margin-bottom: 15px;">
+                    <label for="username" style="display: block; margin-bottom: 5px; font-weight: 500;">Username</label>
+                    <input type="text" id="username" name="username" placeholder="john_doe" required
+                        style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em;">
+                    <small style="color: var(--text-light); display: block; margin-top: 3px;">Minimum 3 characters (letters, numbers, underscores)</small>
+                </div>
+
+                <!-- Password -->
+                <div style="margin-bottom: 15px;">
+                    <label for="password" style="display: block; margin-bottom: 5px; font-weight: 500;">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••" required
+                        style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em;">
+                    <small style="color: var(--text-light); display: block; margin-top: 3px;">Minimum 6 characters</small>
+                </div>
+
+                <!-- Confirm Password -->
+                <div style="margin-bottom: 20px;">
+                    <label for="confirmPassword" style="display: block; margin-bottom: 5px; font-weight: 500;">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••" required
+                        style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em;">
+                    <small style="color: var(--text-light); display: block; margin-top: 3px;">Must match your password</small>
+                </div>
+
+                <!-- Register Button -->
+                <button type="submit" class="btn" id="registerBtn" style="width: 100%; padding: 12px; font-size: 1em; font-weight: bold; margin-bottom: 15px;">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Terms -->
+            <div style="text-align: center; margin-bottom: 20px; font-size: 0.9em; color: var(--text-light);">
+                By registering, you agree to our Terms of Service and Privacy Policy
+            </div>
+
+            <!-- Login Link -->
+            <div style="text-align: center; border-top: 1px solid #bdc3c7; padding-top: 20px;">
+                <p style="margin: 0;">Already have an account? 
+                    <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .signup-bg {
+            background: linear-gradient(135deg, #d4af37 0%, #2c3e50 100%);
+        }
+
+        .signup-box {
+            max-width: 450px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+
+        .alert-error {
+            background-color: #fadbd8;
+            border-left-color: #e74c3c;
+            color: #a93226;
+        }
+
+        .alert-success {
+            background-color: #d5f4e6;
+            border-left-color: #27ae60;
+            color: #186a3b;
+        }
+
+        @media (max-width: 768px) {
+            .signup-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+
+    <script>
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Clear previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                        confirmPassword,
+                        email,
+                        fullName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('signupForm').reset();
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError('Network error. Please try again.');
+                console.error('Error:', error);
+            }
+        });
+
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strength = getPasswordStrength(password);
+            // Can add visual indicator here
+        });
+
+        function getPasswordStrength(password) {
+            if (password.length < 6) return 'weak';
+            if (password.length < 10) return 'medium';
+            if (/[A-Z]/.test(password) && /[0-9]/.test(password)) return 'strong';
+            return 'medium';
+        }
+    </script>
+</body>
+</html>

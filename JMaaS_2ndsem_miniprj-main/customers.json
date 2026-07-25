@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "Rajesh Kumar",
+    "email": "rajesh@email.com",
+    "phone": "9876543210",
+    "joinDate": "2024-01-15T00:00:00.000Z",
+    "totalSpent": 125000,
+    "orderCount": 5
+  },
+  {
+    "id": 2,
+    "name": "Priya Sharma",
+    "email": "priya@email.com",
+    "phone": "9876543211",
+    "joinDate": "2024-02-20T00:00:00.000Z",
+    "totalSpent": 95000,
+    "orderCount": 3
+  },
+  {
+    "id": 3,
+    "name": "Amit Patel",
+    "email": "amit@email.com",
+    "phone": "9876543212",
+    "joinDate": "2024-03-10T00:00:00.000Z",
+    "totalSpent": 220000,
+    "orderCount": 8
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "name": "jmaas-prototype",
+  "version": "1.0.0",
+  "description": "AI-Enabled Jewellery Management as a Service - Production Ready",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=14.x",
+    "npm": ">=6.x"
+  },
+  "keywords": [
+    "jewellery",
+    "management",
+    "inventory",
+    "billing",
+    "dashboard",
+    "analytics"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

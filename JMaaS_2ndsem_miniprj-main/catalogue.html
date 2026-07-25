@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - E-Catalogue</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header will be inserted here by JavaScript -->
+    
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <a href="/dashboard.html" style="color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 0.95em;">← Back to Dashboard</a>
+        </div>
+        
+        <div class="dashboard-container">
+            <h1 class="inventory-title">📱 E-Catalogue (Digital Brochure)</h1>
+
+            <!-- Filter and Sort Section -->
+            <div class="filter-section">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <input 
+                        type="text" 
+                        id="searchCatalogue" 
+                        placeholder="Search items..." 
+                        style="flex: 1; min-width: 200px; padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;"
+                        onkeyup="searchCatalogue(this.value)"
+                    >
+                    
+                    <select id="categoryFilter" onchange="filterCatalogue(this.value)" style="padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        <option value="">All Categories</option>
+                        <!-- Categories will be populated by JavaScript -->
+                    </select>
+
+                    <select id="sortBy" onchange="sortCatalogue(this.value)" style="padding: 10px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        <option value="name">Sort by Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="stock">Most Stock</option>
+                    </select>
+
+                    <button class="btn btn-secondary" onclick="downloadCatalogue()">📥 Download PDF</button>
+                </div>
+            </div>
+
+            <!-- Catalogue Grid -->
+            <div class="items-grid" id="catalogueGrid">
+                <!-- Items will be loaded here by JavaScript -->
+            </div>
+
+            <!-- No items message -->
+            <div id="noCatalogueMessage" class="empty-cart" style="display: none; padding: 60px 20px;">
+                <div class="empty-cart-icon">📁</div>
+                <p>No items found in catalogue</p>
+            </div>
+
+            <!-- Pagination -->
+            <div style="text-align: center; margin-top: 30px;">
+                <div id="paginationControls" style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+                    <!-- Pagination buttons will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/catalogue.js"></script>
+</body>
+</html>

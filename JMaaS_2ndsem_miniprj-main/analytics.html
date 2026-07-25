@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - Analytics</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header will be inserted here by JavaScript -->
+    
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <a href="/dashboard.html" style="color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 0.95em;">← Back to Dashboard</a>
+        </div>
+        
+        <div class="dashboard-container">
+            <h1 class="inventory-title">📈 Analytics Dashboard</h1>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <label for="timeFilter" style="font-weight: 600;">Time Period:</label>
+                    <select id="timeFilter" onchange="updateAnalytics()" style="padding: 8px; border: 2px solid #bdc3c7; border-radius: 5px;">
+                        <option value="month">This Month</option>
+                        <option value="quarter">This Quarter</option>
+                        <option value="year">This Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+                    <button class="btn btn-secondary" style="margin-left: auto;" onclick="exportReport()">📥 Export Report</button>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <h3 style="color: #2c3e50; margin-top: 30px; margin-bottom: 15px;">Key Performance Indicators</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Inventory Value</div>
+                    <div class="stat-value" id="kpiInventoryValue">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Items in Stock</div>
+                    <div class="stat-value" id="kpiStockCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Unique Products</div>
+                    <div class="stat-value" id="kpiProductCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Customers</div>
+                    <div class="stat-value" id="kpiCustomerCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Product Categories</div>
+                    <div class="stat-value" id="kpiCategoryCount">0</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <h3 style="color: #2c3e50; margin-top: 30px; margin-bottom: 15px;">Analytics Charts</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                <!-- Category Sales Chart -->
+                <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Category Distribution</h4>
+                    <div id="categoryChart" style="height: 300px; background: #f9f9f9; border-radius: 5px; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px;">
+                        <!-- Bar chart will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Stock Status Chart -->
+                <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Stock Level Status</h4>
+                    <div style="padding: 20px; text-align: center;">
+                        <div style="display: inline-block; text-align: left;">
+                            <div style="margin-bottom: 10px;">
+                                <span style="display: inline-block; width: 15px; height: 15px; background: #27ae60; border-radius: 3px; margin-right: 8px;"></span>
+                                <span>Good Stock</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span style="display: inline-block; width: 15px; height: 15px; background: #f39c12; border-radius: 3px; margin-right: 8px;"></span>
+                                <span>Low Stock</span>
+                            </div>
+                            <div>
+                                <span style="display: inline-block; width: 15px; height: 15px; background: #e74c3c; border-radius: 3px; margin-right: 8px;"></span>
+                                <span>Out of Stock</span>
+                            </div>
+                        </div>
+                        <div id="stockStatus" style="margin-top: 20px;">
+                            <!-- Stock status will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory List -->
+            <h3 style="color: #2c3e50; margin-top: 30px; margin-bottom: 15px;">Inventory Summary</h3>
+            <div style="background: white; border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <table id="inventorySummaryTable" style="width: 100%; border-collapse: collapse;">
+                    <tr style="background: #d4af37; color: #2c3e50;">
+                        <th style="padding: 15px; text-align: left;">Item Name</th>
+                        <th style="padding: 15px; text-align: left;">Category</th>
+                        <th style="padding: 15px; text-align: right;">Price</th>
+                        <th style="padding: 15px; text-align: center;">Stock</th>
+                        <th style="padding: 15px; text-align: right;">Value</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>

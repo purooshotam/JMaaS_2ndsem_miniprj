@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - AI Greeting Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header will be inserted here by JavaScript -->
+    
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <a href="/dashboard.html" style="color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 0.95em;">← Back to Dashboard</a>
+        </div>
+        
+        <div class="dashboard-container">
+            <h1 class="inventory-title">🎁 AI Greeting Generator</h1>
+
+            <div class="greeting-container">
+                <!-- Input Form -->
+                <div class="greeting-form">
+                    <h2>Generate Personalized Greeting</h2>
+                    
+                    <div class="form-control">
+                        <label for="customerName">👤 Customer Name:</label>
+                        <input 
+                            type="text" 
+                            id="customerName" 
+                            placeholder="Enter customer name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-control">
+                        <label for="occasion">🎉 Occasion:</label>
+                        <select id="occasion" required>
+                            <option value="">-- Select an Occasion --</option>
+                            <option value="Birthday">🎂 Birthday</option>
+                            <option value="Wedding">💍 Wedding</option>
+                            <option value="Anniversary">💑 Anniversary</option>
+                            <option value="Engagement">💍 Engagement</option>
+                            <option value="Festival">🪔 Festival</option>
+                            <option value="New Year">🎊 New Year</option>
+                            <option value="Graduation">🎓 Graduation</option>
+                            <option value="Corporate Event">🏢 Corporate Event</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-generate" onclick="generateGreetingHandler()">
+                        ✨ Generate Greeting
+                    </button>
+                </div>
+
+                <!-- Output Display -->
+                <div class="greeting-output">
+                    <h3>Generated Greeting</h3>
+                    <div class="greeting-text" id="greetingOutput">
+                        <p style="color: #7f8c8d; font-size: 0.9em;">Your personalized greeting will appear here...</p>
+                    </div>
+                    <button class="copy-btn" id="copyBtn" onclick="copyGreeting()" style="display: none;">
+                        📋 Copy to Clipboard
+                    </button>
+                    <div class="copy-success" id="copySuccess">Copied to clipboard!</div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="copy-btn" id="whatsappBtn" style="display: none; background-color: #25d366; flex: 1;" onclick="shareOnWhatsApp()">
+                            💬 Share on WhatsApp
+                        </button>
+                        <button class="copy-btn" id="emailBtn" style="display: none; background-color: #ea4335; flex: 1;" onclick="shareViaEmail()">
+                            📧 Share via Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/greeting.js"></script>
+</body>
+</html>

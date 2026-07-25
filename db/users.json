@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "username": "demo",
+    "password": "demo123",
+    "email": "demo@jmaas.com",
+    "role": "manager",
+    "createdAt": "2026-05-15T14:16:01.932Z",
+    "lastLogin": "2026-07-25T19:45:04.081Z",
+    "profile": {
+      "fullName": "Demo Manager",
+      "phone": "9876543210",
+      "store": "Main Store"
+    }
+  }
+]

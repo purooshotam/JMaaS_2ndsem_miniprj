@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JMaaS - Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard-modern.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-page">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <span class="brand-icon">💎</span>
+                <span class="brand-text">JMaaS</span>
+            </div>
+            <button class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar">
+                <span class="toggle-icon">☰</span>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/dashboard.html" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="/inventory.html" class="nav-item">
+                <span class="nav-icon">💍</span>
+                <span class="nav-text">Inventory</span>
+            </a>
+            <a href="/billing.html" class="nav-item">
+                <span class="nav-icon">🧾</span>
+                <span class="nav-text">Billing</span>
+            </a>
+            <a href="/customers.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Customers</span>
+            </a>
+            <a href="/greeting-generator.html" class="nav-item">
+                <span class="nav-icon">🎁</span>
+                <span class="nav-text">AI Greetings</span>
+            </a>
+            <a href="/analytics.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span class="nav-text">Analytics</span>
+            </a>
+            <a href="/catalogue.html" class="nav-item">
+                <span class="nav-icon">📱</span>
+                <span class="nav-text">Catalogue</span>
+            </a>
+            <a href="/transactions.html" class="nav-item">
+                <span class="nav-icon">💰</span>
+                <span class="nav-text">Transactions</span>
+            </a>
+            <a href="/ratings.html" class="nav-item">
+                <span class="nav-icon">⭐</span>
+                <span class="nav-text">Ratings</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout(); return false;" class="nav-item logout-item">
+                <span class="nav-icon">🚪</span>
+                <span class="nav-text">Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search products, customers..." id="globalSearch">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Welcome</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Quick Action Buttons -->
+            <div class="quick-actions">
+                <button class="action-btn action-primary" onclick="navigateTo('/billing.html')">
+                    <span class="action-icon">🧾</span>
+                    <span class="action-text">New Sale</span>
+                </button>
+                <button class="action-btn action-secondary" onclick="navigateTo('/inventory.html')">
+                    <span class="action-icon">📦</span>
+                    <span class="action-text">Add Product</span>
+                </button>
+                <button class="action-btn action-tertiary" onclick="navigateTo('/customers.html')">
+                    <span class="action-icon">👤</span>
+                    <span class="action-text">Add Customer</span>
+                </button>
+                <button class="action-btn action-accent" onclick="navigateTo('/analytics.html')">
+                    <span class="action-icon">📊</span>
+                    <span class="action-text">View Reports</span>
+                </button>
+            </div>
+
+            <!-- KPI Statistics Cards -->
+            <div class="kpi-grid" id="kpiGrid">
+                <!-- Dynamic KPI cards will be loaded here -->
+                <div class="kpi-card kpi-loading">
+                    <div class="kpi-shimmer"></div>
+                </div>
+                <div class="kpi-card kpi-loading">
+                    <div class="kpi-shimmer"></div>
+                </div>
+                <div class="kpi-card kpi-loading">
+                    <div class="kpi-shimmer"></div>
+                </div>
+                <div class="kpi-card kpi-loading">
+                    <div class="kpi-shimmer"></div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sales Trend (Last 7 Days)</h3>
+                        <div class="card-actions">
+                            <button class="btn-icon" onclick="refreshSalesChart()" title="Refresh">🔄</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="salesTrendChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Inventory Distribution</h3>
+                        <div class="card-actions">
+                            <button class="btn-icon" onclick="refreshInventoryChart()" title="Refresh">🔄</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="inventoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widgets Grid -->
+            <div class="widgets-grid">
+                <!-- Low Stock Alerts -->
+                <div class="widget-card alert-widget">
+                    <div class="card-header">
+                        <h3 class="card-title">⚠️ Low Stock Alerts</h3>
+                        <span class="badge badge-danger" id="alertCount">0</span>
+                    </div>
+                    <div class="card-body scrollable" id="lowStockAlerts">
+                        <div class="empty-state">
+                            <span class="empty-icon">📦</span>
+                            <p>All items have sufficient stock</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">💰 Recent Transactions</h3>
+                        <a href="/transactions.html" class="link-view-all">View All →</a>
+                    </div>
+                    <div class="card-body scrollable" id="recentTransactions">
+                        <div class="empty-state">
+                            <span class="empty-icon">💳</span>
+                            <p>No recent transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Selling Products -->
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">⭐ Top Selling Products</h3>
+                        <a href="/catalogue.html" class="link-view-all">View All →</a>
+                    </div>
+                    <div class="card-body scrollable" id="topProducts">
+                        <div class="empty-state">
+                            <span class="empty-icon">🏆</span>
+                            <p>No sales data yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Modules -->
+            <div class="section-header">
+                <h2 class="section-title">Quick Access</h2>
+                <p class="section-subtitle">Navigate to different modules</p>
+            </div>
+
+            <div class="modules-grid">
+                <a href="/inventory.html" class="module-card">
+                    <div class="module-icon">💍</div>
+                    <h3 class="module-title">Inventory</h3>
+                    <p class="module-desc">Manage jewellery stock and categories</p>
+                </a>
+
+                <a href="/billing.html" class="module-card">
+                    <div class="module-icon">🧾</div>
+                    <h3 class="module-title">Billing</h3>
+                    <p class="module-desc">Create bills and process sales</p>
+                </a>
+
+                <a href="/greeting-generator.html" class="module-card">
+                    <div class="module-icon">🎁</div>
+                    <h3 class="module-title">AI Greetings</h3>
+                    <p class="module-desc">Generate personalized greetings</p>
+                </a>
+
+                <a href="/customers.html" class="module-card">
+                    <div class="module-icon">👥</div>
+                    <h3 class="module-title">Customers</h3>
+                    <p class="module-desc">Manage customer database</p>
+                </a>
+
+                <a href="/analytics.html" class="module-card">
+                    <div class="module-icon">📈</div>
+                    <h3 class="module-title">Analytics</h3>
+                    <p class="module-desc">View business reports</p>
+                </a>
+
+                <a href="/catalogue.html" class="module-card">
+                    <div class="module-icon">📱</div>
+                    <h3 class="module-title">Catalogue</h3>
+                    <p class="module-desc">Browse product catalogue</p>
+                </a>
+
+                <a href="/transactions.html" class="module-card">
+                    <div class="module-icon">💰</div>
+                    <h3 class="module-title">Transactions</h3>
+                    <p class="module-desc">View transaction history</p>
+                </a>
+
+                <a href="/ratings.html" class="module-card">
+                    <div class="module-icon">⭐</div>
+                    <h3 class="module-title">Ratings</h3>
+                    <p class="module-desc">Product reviews and feedback</p>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        // ========================================
+        // DASHBOARD INITIALIZATION
+        // ========================================
+
+        // Set username
+        const username = checkAuth();
+        document.getElementById('userName').textContent = `Welcome, ${username}`;
+
+        // Global search functionality
+        document.getElementById('globalSearch').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            // Implement search logic here
+            console.log('Searching for:', query);
+        });
+
+        // Chart instances
+        let salesChart = null;
+        let inventoryChart = null;
+
+        // Initialize dashboard
+        async function initDashboard() {
+            await loadKPICards();
+            await loadSalesChart();
+            await loadInventoryChart();
+            await loadLowStockAlerts();
+            await loadRecentTransactions();
+            await loadTopProducts();
+        }
+
+        // Load KPI Cards
+        async function loadKPICards() {
+            try {
+                const [stats, transactions, customers] = await Promise.all([
+                    getStats(),
+                    getTransactions(),
+                    getCustomers()
+                ]);
+
+                // Calculate today's metrics
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    tDate.setHours(0, 0, 0, 0);
+                    return tDate.getTime() === today.getTime();
+                });
+
+                const todaySales = todayTransactions.reduce((sum, t) => sum + (t.totalAmount || 0), 0);
+                
+                // Calculate monthly revenue
+                const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                const monthTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate >= monthStart;
+                });
+                const monthlyRevenue = monthTransactions.reduce((sum, t) => sum + (t.totalAmount || 0), 0);
+
+                // Get low stock count
+                const inventory = await getInventory();
+                const lowStockCount = inventory.filter(item => (item.quantity || item.stock || 0) < 10).length;
+
+                // Create KPI cards
+                const kpiData = [
+                    {
+                        title: "Today's Sales",
+                        value: formatCurrency(todaySales),
+                        icon: "💰",
+                        trend: "+12%",
+                        trendUp: true,
+                        color: "primary"
+                    },
+                    {
+                        title: "Monthly Revenue",
+                        value: formatCurrency(monthlyRevenue),
+                        icon: "📊",
+                        trend: "+8%",
+                        trendUp: true,
+                        color: "success"
+                    },
+                    {
+                        title: "Total Customers",
+                        value: customers.length,
+                        icon: "👥",
+                        trend: `+${customers.filter(c => {
+                            const joinDate = new Date(c.joinDate);
+                            return joinDate >= monthStart;
+                        }).length} this month`,
+                        trendUp: true,
+                        color: "info"
+                    },
+                    {
+                        title: "Low Stock Items",
+                        value: lowStockCount,
+                        icon: "⚠️",
+                        trend: lowStockCount > 0 ? "Needs attention" : "All good",
+                        trendUp: false,
+                        color: lowStockCount > 0 ? "warning" : "success"
+                    }
+                ];
+
+                const kpiGrid = document.getElementById('kpiGrid');
+                kpiGrid.innerHTML = kpiData.map(kpi => `
+                    <div class="kpi-card kpi-${kpi.color}">
+                        <div class="kpi-header">
+                            <span class="kpi-icon">${kpi.icon}</span>
+                            <span class="kpi-trend ${kpi.trendUp ? 'trend-up' : 'trend-down'}">${kpi.trend}</span>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value">${kpi.value}</h3>
+                            <p class="kpi-title">${kpi.title}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading KPI cards:', error);
+                document.getElementById('kpiGrid').innerHTML = '<p class="error-text">Failed to load metrics</p>';
+            }
+        }
+
+        // Load Sales Trend Chart
+        async function loadSalesChart() {
+            try {
+                const transactions = await getTransactions();
+                const last7Days = [];
+                const salesData = [];
+                
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    date.setHours(0, 0, 0, 0);
+                    
+                    const dayTransactions = transactions.filter(t => {
+                        const tDate = new Date(t.date);
+                        tDate.setHours(0, 0, 0, 0);
+                        return tDate.getTime() === date.getTime();
+                    });
+                    
+                    const daySales = dayTransactions.reduce((sum, t) => sum + (t.totalAmount || 0), 0);
+                    
+                    last7Days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+                    salesData.push(daySales);
+                }
+
+                const ctx = document.getElementById('salesTrendChart');
+                if (salesChart) salesChart.destroy();
+                
+                salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last7Days,
+                        datasets: [{
+                            label: 'Sales (₹)',
+                            data: salesData,
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#d4af37',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 35, 50, 0.9)',
+                                padding: 12,
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#d4af37',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Sales: ' + formatCurrency(context.parsed.y);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '₹' + value.toLocaleString('en-IN');
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading sales chart:', error);
+            }
+        }
+
+        // Load Inventory Distribution Chart
+        async function loadInventoryChart() {
+            try {
+                const inventory = await getInventory();
+                const categories = {};
+                
+                inventory.forEach(item => {
+                    const cat = item.category || 'Other';
+                    categories[cat] = (categories[cat] || 0) + 1;
+                });
+
+                const ctx = document.getElementById('inventoryChart');
+                if (inventoryChart) inventoryChart.destroy();
+                
+                inventoryChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(categories),
+                        datasets: [{
+                            data: Object.values(categories),
+                            backgroundColor: [
+                                '#d4af37',
+                                '#1a2332',
+                                '#c0392b',
+                                '#27ae60',
+                                '#3498db',
+                                '#f39c12'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    padding: 15,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 35, 50, 0.9)',
+                                padding: 12,
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#d4af37',
+                                borderWidth: 1
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading inventory chart:', error);
+            }
+        }
+
+        // Load Low Stock Alerts
+        async function loadLowStockAlerts() {
+            try {
+                const inventory = await getInventory();
+                const lowStockItems = inventory.filter(item => (item.quantity || item.stock || 0) < 10);
+                
+                const container = document.getElementById('lowStockAlerts');
+                const badge = document.getElementById('alertCount');
+                
+                badge.textContent = lowStockItems.length;
+                
+                if (lowStockItems.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">✅</span>
+                            <p>All items have sufficient stock</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = lowStockItems.slice(0, 5).map(item => {
+                        const stock = item.quantity || item.stock || 0;
+                        const severity = stock <= 3 ? 'critical' : 'warning';
+                        return `
+                            <div class="list-item alert-${severity}">
+                                <div class="item-icon">⚠️</div>
+                                <div class="item-content">
+                                    <h4 class="item-title">${item.productName || item.name}</h4>
+                                    <p class="item-subtitle">Only ${stock} in stock</p>
+                                </div>
+                                <button class="btn-sm" onclick="navigateTo('/inventory.html')">Restock</button>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Error loading low stock alerts:', error);
+            }
+        }
+
+        // Load Recent Transactions
+        async function loadRecentTransactions() {
+            try {
+                const transactions = await getTransactions();
+                const container = document.getElementById('recentTransactions');
+                
+                if (transactions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">💳</span>
+                            <p>No recent transactions</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = transactions.slice(0, 5).map(trans => `
+                        <div class="list-item">
+                            <div class="item-icon">💰</div>
+                            <div class="item-content">
+                                <h4 class="item-title">${trans.customerName || 'Customer'}</h4>
+                                <p class="item-subtitle">${new Date(trans.date).toLocaleDateString()}</p>
+                            </div>
+                            <span class="item-amount">${formatCurrency(trans.totalAmount || 0)}</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+            }
+        }
+
+        // Load Top Products
+        async function loadTopProducts() {
+            try {
+                const inventory = await getInventory();
+                const container = document.getElementById('topProducts');
+                
+                // For demo, show top 5 products by stock
+                const topItems = inventory.slice(0, 5);
+                
+                if (topItems.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">🏆</span>
+                            <p>No sales data yet</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = topItems.map((item, index) => {
+                        const medal = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index];
+                        return `
+                            <div class="list-item">
+                                <div class="item-rank">${medal}</div>
+                                <div class="item-content">
+                                    <h4 class="item-title">${item.productName || item.name}</h4>
+                                    <p class="item-subtitle">${item.category}</p>
+                                </div>
+                                <span class="item-price">${formatCurrency(item.price || 0)}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Error loading top products:', error);
+            }
+        }
+
+        // Refresh functions
+        function refreshSalesChart() {
+            loadSalesChart();
+        }
+
+        function refreshInventoryChart() {
+            loadInventoryChart();
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>
