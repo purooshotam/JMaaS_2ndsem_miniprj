@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "JMaaS_2ndsem_miniprj-main/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "JMaaS_2ndsem_miniprj-main/server.js"
+    }
+  ]
+}
