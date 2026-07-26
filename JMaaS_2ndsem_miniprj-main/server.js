@@ -350,16 +350,27 @@ app.use((req, res) => {
   });
 });
 
-// Start server (only in non-Vercel environment)
+// Start server (skip only for Vercel serverless)
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`
   ╔════════════════════════════════════════╗
   ║   JMaaS Prototype Server Running       ║
-  ║   http://localhost:${PORT}              ║
-  ║   Press Ctrl+C to stop                 ║
+  ║   Port: ${PORT}                         ║
+  ║   Environment: ${process.env.NODE_ENV || 'development'}  ║
   ╚════════════════════════════════════════╝
     `);
+  });
+
+  // Handle server errors
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use`);
+      process.exit(1);
+    } else {
+      console.error('Server error:', error);
+      process.exit(1);
+    }
   });
 }
 
