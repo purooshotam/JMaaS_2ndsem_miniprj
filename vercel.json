@@ -1,15 +1,7 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "JMaaS_2ndsem_miniprj-main/server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "JMaaS_2ndsem_miniprj-main/server.js"
-    }
-  ]
+  "buildCommand": "cd JMaaS_2ndsem_miniprj-main && npm install",
+  "devCommand": "cd JMaaS_2ndsem_miniprj-main && npm start",
+  "installCommand": "cd JMaaS_2ndsem_miniprj-main && npm install",
+  "framework": null,
+  "outputDirectory": "JMaaS_2ndsem_miniprj-main"
 }
