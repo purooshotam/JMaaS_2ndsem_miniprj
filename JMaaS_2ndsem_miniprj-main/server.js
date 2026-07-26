@@ -337,13 +337,18 @@ app.use((req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`
+// Start server (only in non-Vercel environment)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`
   ╔════════════════════════════════════════╗
   ║   JMaaS Prototype Server Running       ║
   ║   http://localhost:${PORT}              ║
   ║   Press Ctrl+C to stop                 ║
   ╚════════════════════════════════════════╝
-  `);
-});
+    `);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
