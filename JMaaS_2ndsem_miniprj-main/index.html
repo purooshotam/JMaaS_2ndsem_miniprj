@@ -91,7 +91,7 @@
                     displayLoginError(data.message || 'Login failed');
                 }
             } catch (error) {
-                displayLoginError('Error connecting to server. Make sure the server is running on http://localhost:3000');
+                displayLoginError('Error connecting to server. Please try again.');
                 console.error('Login error:', error);
             }
         });
