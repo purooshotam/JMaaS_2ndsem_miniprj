@@ -4,8 +4,9 @@ services:
     env: node
     region: oregon
     plan: free
+    rootDir: JMaaS_2ndsem_miniprj-main
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
