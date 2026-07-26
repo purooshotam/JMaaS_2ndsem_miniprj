@@ -18,6 +18,19 @@ Storage.init();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// CORS headers for Vercel
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Serve static files (HTML, CSS, JS) from current directory
 app.use(express.static(__dirname));
 
@@ -338,7 +351,7 @@ app.use((req, res) => {
 });
 
 // Start server (only in non-Vercel environment)
-if (process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`
   ╔════════════════════════════════════════╗
